@@ -18,7 +18,9 @@ Make sure you have [Git](https://git-scm.com/) installed
 
 `python convert.py -p [path_to_your_json_file]` without brackets and path_to_your_json_file being the path to your JSON file
  
- 3. A new `.csv` file with the same name will be made in the same directory
+ 3. RStoCSV will automatically analyze your JSON file and find all of the scouted metrics.
+ 4. A new `.csv` file with the same name will be made in the same directory.
+ 5. A HTML file called `table.html` will also be created in the local RStoCSV directory for easy visualization.
  
 ### Example Usage
   Input:
@@ -26,6 +28,8 @@ Make sure you have [Git](https://git-scm.com/) installed
   
   Output:
   `C:/Users/William/Scouting_Data/scout.csv`
+  
+ 
  
  
  
