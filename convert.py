@@ -60,6 +60,7 @@ data = np.concatenate((team_nums, data), axis=1)
 
 # Add team number and name of scout to the CSV header
 headers.insert(0, "Name of Scout")
+headers.insert(0, "Team Number")
 # Convert array into dataframe
 table = pd.DataFrame(data=data, columns=headers)
 # Save data frame as an html file
