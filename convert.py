@@ -4,12 +4,11 @@ import numpy as np
 import pandas as pd
 
 parser = argparse.ArgumentParser()
-parser.add_argument("path", help="the path to the JSON file you want to convert", type=str)
+parser.add_argument('-p', '--path', help="the path to the JSON file you want to convert", type=str)
 args = parser.parse_args()
 
 with open(args.path) as file_path:
     json_data = json.load(file_path)
-
 
 # The total number of scouted metrics
 num_metrics = len(json_data['teams'][list(json_data['teams'].keys())[0]][0]['metrics'])
@@ -34,29 +33,30 @@ for team in json_data['teams'].values():
         data[y_pos] = temp
         y_pos += 1
 
-team_nums = []
+# Put scout names into numpy array
+scout_names = []
+for team in json_data['teams'].values():
+    for scout in team:
+        scout_names.append(scout['name'])
+scout_names = np.vstack(np.asarray(scout_names))
+data = np.concatenate((scout_names, data), axis=1)
 
-# TODO: Add team number and match number to array
+# Put team numbers into numpy array
+team_nums = []
 for team in json_data["teams"]:
     for i in range(0, len(json_data["teams"][team])):
         team_nums.append(team)
-
 team_nums = np.vstack(np.asarray(team_nums))
-
 data = np.concatenate((team_nums, data), axis=1)
 
-print(team_nums.shape, data.shape)
 print(data.shape)
-
+# Add team number and name of scout to the CSV header
+headers.insert(0, "Name of Scout")
 headers.insert(0, "Team Number")
-
-
-
 
 # Convert array into dataframe
 table = pd.DataFrame(data=data, columns=headers)
 # Save data frame as an html file
 table.to_html("frame.html")
-
 # Convert data frame to csv
 table.to_csv("scout.csv", index=False)
