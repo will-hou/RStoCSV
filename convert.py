@@ -1,5 +1,7 @@
 import argparse
 import json
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -15,7 +17,6 @@ num_metrics = len(json_data['teams'][list(json_data['teams'].keys())[0]][0]['met
 
 # Find total number of scouts
 num_scouts = 0
-
 for i in json_data['teams'].values():
     num_scouts += len(i)
 
@@ -49,7 +50,6 @@ for team in json_data["teams"]:
 team_nums = np.vstack(np.asarray(team_nums))
 data = np.concatenate((team_nums, data), axis=1)
 
-print(data.shape)
 # Add team number and name of scout to the CSV header
 headers.insert(0, "Name of Scout")
 headers.insert(0, "Team Number")
@@ -58,5 +58,7 @@ headers.insert(0, "Team Number")
 table = pd.DataFrame(data=data, columns=headers)
 # Save data frame as an html file
 table.to_html("frame.html")
-# Convert data frame to csv
-table.to_csv("scout.csv", index=False)
+# Create new CSV file with the same name in the original file's directory
+open("{}/{}.csv".format(os.path.dirname(args.path), os.path.basename(args.path).split('.')[0]), 'w')
+# Write data from dataframe to CSV file
+table.to_csv("{}/scout.csv".format(os.path.dirname(args.path)), index=False)
