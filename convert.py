@@ -9,11 +9,19 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--path', help="the path to the JSON file you want to convert", type=str)
 args = parser.parse_args()
 
-with open(args.path) as file_path:
-    json_data = json.load(file_path)
+try:
+    with open(args.path) as file_path:
+        json_data = json.load(file_path)
+except json.decoder.JSONDecodeError:
+    print("Please use a valid Robot Scouter JSON (.json) file")
+    exit()
 
 # The total number of scouted metrics
-num_metrics = len(json_data['teams'][list(json_data['teams'].keys())[0]][0]['metrics'])
+try:
+    num_metrics = len(json_data['teams'][list(json_data['teams'].keys())[0]][0]['metrics'])
+except KeyError:
+    print("Please use a valid Robot Scouter JSON (.json) file")
+    exit()
 
 # Find total number of scouts
 num_scouts = 0
@@ -52,13 +60,13 @@ data = np.concatenate((team_nums, data), axis=1)
 
 # Add team number and name of scout to the CSV header
 headers.insert(0, "Name of Scout")
-headers.insert(0, "Team Number")
-
 # Convert array into dataframe
 table = pd.DataFrame(data=data, columns=headers)
 # Save data frame as an html file
 table.to_html("frame.html")
 # Create new CSV file with the same name in the original file's directory
-open("{}/{}.csv".format(os.path.dirname(args.path), os.path.basename(args.path).split('.')[0]), 'w')
-# Write data from dataframe to CSV file
-table.to_csv("{}/scout.csv".format(os.path.dirname(args.path)), index=False)
+newpath = "{}/{}.csv".format(os.path.dirname(args.path), os.path.basename(args.path).split('.')[0])
+open(newpath, 'w')
+# Write data from datasframe to CSV file
+table.to_csv(newpath, index=False)
+print("Successfully created {}.csv in {}".format( os.path.basename(args.path).split('.')[0], os.path.dirname(args.path)))
