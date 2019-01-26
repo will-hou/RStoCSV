@@ -21,6 +21,8 @@ Make sure you have:
 2. To convert your Robot Scouter JSON file to CSV, enter:
 
 `python convert.py -p [path_to_your_json_file]` without brackets and path_to_your_json_file being the path to your JSON file. Note, the file cannot be in the RStoCSV directory.
+
+Optional fields: `-f` Removes any scouts that don't have a value for the "Name" metric. Don't use this if you don't have a "Name" metric in your scouting template
  
  3. RStoCSV will automatically analyze your JSON file and find all of the scouted metrics.
  4. A new `.csv` file with the same name will be made in the same directory.
