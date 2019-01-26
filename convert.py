@@ -5,8 +5,11 @@ import os
 import numpy as np
 import pandas as pd
 
+from utils import *
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--path', help="the path to the JSON file you want to convert", type=str)
+parser.add_argument('-f', '--filter', help="whether or not to remove empty scouts", action="store_true")
 args = parser.parse_args()
 
 try:
@@ -22,6 +25,8 @@ try:
 except KeyError:
     print("Please use a valid Robot Scouter JSON (.json) file")
     exit()
+
+remove_repeats(json_data) if args.filter else None
 
 # Find total number of scouts
 num_scouts = 0
@@ -67,7 +72,11 @@ table = pd.DataFrame(data=data, columns=headers)
 table.to_html("frame.html")
 # Create new CSV file with the same name in the original file's directory
 newpath = "{}/{}.csv".format(os.path.dirname(args.path), os.path.basename(args.path).split('.')[0])
-open(newpath, 'w')
+try:
+    open(newpath, 'w')
+except PermissionError:
+    print("The file you're trying to convert can't be inside the RStoCSV directory!")
+    exit()
 # Write data from datasframe to CSV file
 table.to_csv(newpath, index=False)
-print("Successfully created {}.csv in {}".format( os.path.basename(args.path).split('.')[0], os.path.dirname(args.path)))
+print("Successfully created {}.csv in {}".format(os.path.basename(args.path).split('.')[0], os.path.dirname(args.path)))
