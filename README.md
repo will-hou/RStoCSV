@@ -6,9 +6,9 @@ Easy to use program that converts JSON data exports from [Robot Scouter](https:/
 ## Installation
 Make sure you have: 
 
-*[Git](https://git-scm.com/)
-*[Python](https://www.python.org/)
-*[PIP](https://pypi.org/project/pip/)
+* [Git](https://git-scm.com/)
+* [Python](https://www.python.org/)
+* [PIP](https://pypi.org/project/pip/)
 
 1. In your terminal of choice, navigate to where you want the folder to be installed. [Click here if that was gibberish](https://www.davidbaumgold.com/tutorials/command-line/).
 2. Enter the following command:
