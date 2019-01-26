@@ -4,7 +4,11 @@ Easy to use program that converts JSON data exports from [Robot Scouter](https:/
 
 
 ## Installation
-Make sure you have [Git](https://git-scm.com/) installed
+Make sure you have: 
+
+*[Git](https://git-scm.com/)
+*[Python](https://www.python.org/)
+*[PIP](https://pypi.org/project/pip/)
 
 1. In your terminal of choice, navigate to where you want the folder to be installed. [Click here if that was gibberish](https://www.davidbaumgold.com/tutorials/command-line/).
 2. Enter the following command:
@@ -13,10 +17,10 @@ Make sure you have [Git](https://git-scm.com/) installed
 
 
 ## Usage
-1. Make sure you're in the RStoCSV directory
+1. Make sure you're in the RStoCSV directory.
 2. To convert your Robot Scouter JSON file to CSV, enter:
 
-`python convert.py -p [path_to_your_json_file]` without brackets and path_to_your_json_file being the path to your JSON file
+`python convert.py -p [path_to_your_json_file]` without brackets and path_to_your_json_file being the path to your JSON file. Note, the file cannot be in the RStoCSV directory.
  
  3. RStoCSV will automatically analyze your JSON file and find all of the scouted metrics.
  4. A new `.csv` file with the same name will be made in the same directory.
