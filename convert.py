@@ -12,10 +12,12 @@ parser.add_argument('-p', '--path', help="the path to the JSON file you want to 
 parser.add_argument('-f', '--filter', help="whether or not to remove empty scouts", action="store_true")
 args = parser.parse_args()
 
-
-with open(args.path) as file_path:
-    # print(file_path.read())
-    json_data = json.load(file_path)
+try:
+    with open(args.path) as file_path:
+        json_data = json.load(file_path)
+except json.decoder.JSONDecodeError:
+    print("Invalid JSON file! Make sure your file is a true JSON file")
+    exit()
 
 # The total number of scouted metrics
 try:
@@ -37,14 +39,11 @@ data = np.zeros((num_scouts, num_metrics), dtype='O')
 # List of all metrics scouted for
 headers = [i['name'] for i in json_data['teams'][list(json_data['teams'].keys())[0]][0]['metrics'].values()]
 
-
 # Put scout data into a numpy array
 y_pos = 0
 for team in json_data['teams'].values():
     for scout in team:
-
         metric_values = [i['value'] for i in scout['metrics'].values()]
-
         data[y_pos] = metric_values if len(metric_values) == len(headers) else None
         y_pos += 1
 
