@@ -1,11 +1,31 @@
 # Removes a scout if the "Name" metric is empty
 def remove_repeats(json_data):
     repeats = []
+    strip_empty_scouts(json_data)
     for (team_key, team) in json_data['teams'].items():
         for scout in team:
             for (metric_key, metric) in scout['metrics'].items():
                 if metric['name'] == "Name" and metric['value'] is None:
                     repeats.append([team_key, team.index(scout), metric_key])
+
+    # Compensates for index modification after deletion from list
+    # Keeps track of how many index values to subtract if a team shows up more than once on the repeats list
+    tracker = {}
     for i in repeats:
-        del (json_data['teams'][i[0]][i[1]])
+        index = i[1] - tracker.get(i[0]) if tracker.get(i[0]) is not None else i[1]
+        del json_data['teams'][i[0]][index]
+        if i[0] not in tracker:
+            tracker[i[0]] = 1
+        else:
+            tracker[i[0]] += 1
     print("Deleted {} empty scouts".format(len(repeats)))
+
+
+def strip_empty_scouts(json_data):
+    to_delete = []
+    for (team_key, team) in json_data['teams'].items():
+        for scout in team:
+            if len(scout['metrics'].items()) == 0:
+                to_delete.append([team_key, team.index(scout)])
+    for i in to_delete:
+        del json_data['teams'][i[0]][i[1]]
