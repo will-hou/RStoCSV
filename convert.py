@@ -26,7 +26,7 @@ except KeyError:
     print("Please use a valid Robot Scouter JSON (.json) file")
     exit()
 
-remove_repeats(json_data) if args.filter else None
+filter(json_data) if args.filter else None
 
 # Find total number of scouts
 num_scouts = 0
