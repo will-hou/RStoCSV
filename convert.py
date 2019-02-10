@@ -1,6 +1,8 @@
 import argparse
 import json
 import os
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
 import numpy as np
 import pandas as pd
@@ -8,16 +10,22 @@ import pandas as pd
 from utils import *
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-p', '--path', help="the path to the JSON file you want to convert", type=str)
 parser.add_argument('-f', '--filter', help="whether or not to remove empty scouts", action="store_true")
 args = parser.parse_args()
 
+Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
+file_path = askopenfilename()  # show an "Open" dialog box and return the path to the selected file
+print("Converting {} into a CSV file".format(file_path))
+
 try:
-    with open(args.path) as file_path:
-        json_data = json.load(file_path)
+    with open(file_path) as file:
+        json_data = json.load(file)
 except json.decoder.JSONDecodeError:
     print("Invalid JSON file! Make sure your file is a true JSON file")
     exit()
+
+# Filter the data if wanted
+filter(json_data) if args.filter else None
 
 # The total number of scouted metrics
 try:
@@ -25,8 +33,6 @@ try:
 except KeyError:
     print("Please use a valid Robot Scouter JSON (.json) file")
     exit()
-
-filter(json_data) if args.filter else None
 
 # Find total number of scouts
 num_scouts = 0
@@ -71,7 +77,7 @@ table = pd.DataFrame(data=data, columns=headers)
 # Save data frame as an html file
 table.to_html("frame.html")
 # Create new CSV file with the same name in the original file's directory
-newpath = "{}/{}.csv".format(os.path.dirname(args.path), os.path.basename(args.path).split('.')[0])
+newpath = "{}/{}.csv".format(os.path.dirname(file_path), os.path.basename(file_path).split('.')[0])
 try:
     open(newpath, 'w')
 except PermissionError:
@@ -79,4 +85,4 @@ except PermissionError:
     exit()
 # Write data from datasframe to CSV file
 table.to_csv(newpath, index=False)
-print("Successfully created {}.csv in {}".format(os.path.basename(args.path).split('.')[0], os.path.dirname(args.path)))
+print("Successfully created {}.csv in {}".format(os.path.basename(file_path).split('.')[0], os.path.dirname(file_path)))
