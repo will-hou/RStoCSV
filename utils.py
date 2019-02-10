@@ -19,6 +19,7 @@ def filter(json_data):
         else:
             tracker[i[0]] += 1
     print("Deleted {} empty scouts".format(len(repeats) + num_empty))
+    return json_data
 
 
 # TODO: Find way to incorporate this in the filter function
