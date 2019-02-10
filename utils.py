@@ -1,7 +1,7 @@
 # Removes a scout if the "Name" metric is empty
 def filter(json_data):
     repeats = []
-    num_empty = strip_empty_scouts(json_data)
+    num_empty = strip_empty_metrics(json_data)
     for (team_key, team) in json_data['teams'].items():
         for scout in team:
             for (metric_key, metric) in scout['metrics'].items():
@@ -22,7 +22,7 @@ def filter(json_data):
 
 
 # TODO: Find way to incorporate this in the filter function
-def strip_empty_scouts(json_data):
+def strip_empty_metrics(json_data):
     to_delete = []
     for (team_key, team) in json_data['teams'].items():
         for scout in team:
