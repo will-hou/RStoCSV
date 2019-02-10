@@ -17,7 +17,8 @@ parser.add_argument('-t', '--timestamp',
 args = parser.parse_args()
 
 Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
-file_path = askopenfilename()  # show an "Open" dialog box and return the path to the selected file
+file_path = askopenfilename(
+    filetypes=[("JSON files", '*.json')])  # show an "Open" dialog box and return the path to the selected file
 print("Converting {} into a CSV file".format(file_path))
 print("Filtering: {}, With Timestamps: {}".format(args.filter, args.timestamp))
 
