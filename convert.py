@@ -28,6 +28,14 @@ except json.decoder.JSONDecodeError:
     print("Invalid JSON file! Make sure your file is a true JSON file")
     exit()
 
+if args.timestamp:
+    try:
+        json_data['teams'][list(json_data['teams'].keys())[0]][0]['timestamp']
+    except KeyError:
+        print(
+            "The JSON file you uploaded does not have a timestamp value. Try running the program without the -t flag. Use --help for more info")
+        exit()
+
 # Filter the data, if needed
 filter(json_data) if args.filter else None
 
@@ -88,6 +96,6 @@ try:
 except PermissionError:
     print("The file you're trying to convert can't be inside the RStoCSV directory!")
     exit()
-# Write data from datasframe to CSV file
+# Write data from dataframe to CSV file
 table.to_csv(newpath, index=False)
 print("Successfully created {}.csv in {}".format(os.path.basename(file_path).split('.')[0], os.path.dirname(file_path)))
