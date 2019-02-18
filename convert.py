@@ -10,7 +10,7 @@ import pandas as pd
 from utils import *
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--filter', help="whether or not to remove empty scouts", action="store_true")
+parser.add_argument('-f', '--filter', help="whether or not to remove empty scouts", default=False)
 parser.add_argument('-t', '--timestamp',
                     help="Whether or not to include scout timestamps in the CSV file. ONLY USE with data from Robot Scouter version 3.0.0-beta2 and above ",
                     action="store_true")
@@ -38,7 +38,7 @@ if args.timestamp:
         exit()
 
 # Filter the data, if needed
-filter(json_data) if args.filter else None
+filter(json_data, args.filter) if args.filter else None
 
 # The total number of scouted metrics
 try:

@@ -20,11 +20,11 @@ Make sure you have:
 1. Make sure you're in the RStoCSV directory.
 2. To convert your Robot Scouter JSON file to CSV, enter:
 
-`python convert.py [-f] [-t]` With the items in the brackets being optional. Remove the brackets if you want to actually use them.
+`python convert.py [-f [metric_to_filter by] ] [-t]` With the items in the brackets being optional. Remove the brackets if you want to actually use them.
 
 Optional fields: 
 
-- `-f` Removes any scouts that don't have a value for the "Name" metric. Note: Don't use this if you don't have a "Name" metric in your scouting template. It is possible to filter by a different metric name, feel free to poke around the code if you're comfortable. Otherwise, feel free to let me know and I'd be happy to help!
+- `-f` Removes any scouts that don't have a value for a specified metric. Enter the name of the metric to filter after the -f flag surrounded by `""`
 - `-t` Adds the timestamp of each scout to the CSV file. NOTE: Only use this for data that was exported WITH Robot Scouter version 3.0.0-beta2 or above. You'll get an error otherwise
  
  3. RStoCSV will prompt you to select a Robot Scouter JSON file and will automatically analyze it to find all of the scouted metrics. NOTE: Don't select a file that's located within the local RStoCSV directory.
@@ -33,11 +33,11 @@ Optional fields:
  
 ### Example Usage
   Input:
-  `python convert.py -f`
+  `python convert.py -f "Scout Name"`
   
   Output:
    ```
-   Filtering: True, With Timestamps: False
+   Filtering: Scout Name, With Timestamps: False
    Deleted 31 empty scouts
    Successfully created scout.csv in C:/Users/William/Scouting_Data
    ```
