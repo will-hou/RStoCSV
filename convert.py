@@ -14,6 +14,7 @@ parser.add_argument('-f', '--filter', help="whether or not to remove empty scout
 parser.add_argument('-t', '--timestamp',
                     help="Whether or not to include scout timestamps in the CSV file. ONLY USE with data from Robot Scouter version 3.0.0-beta2 and above ",
                     action="store_true")
+parser.add_argument('-e', '--save_filtered', help="Whether to just format the JSON file and not perform conversions", action="store_true")
 args = parser.parse_args()
 
 Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
@@ -39,6 +40,14 @@ if args.timestamp:
 
 # Filter the data, if needed
 filter(json_data, args.filter) if args.filter else None
+
+# Export filtered data and stop conversion, if specified
+if args.save_filtered:
+    newpath = "{}/{}_filtered.json".format(os.path.dirname(file_path), os.path.basename(file_path).split('.')[0])
+    with open(newpath, 'w') as fp:
+        json.dump(json_data, fp)
+    print("Successfully created {}.json in {}".format(os.path.basename(file_path).split('.')[0], os.path.dirname(file_path)))
+    exit()
 
 # The total number of scouted metrics
 try:
