@@ -14,7 +14,8 @@ parser.add_argument('-f', '--filter', help="whether or not to remove empty scout
 parser.add_argument('-t', '--timestamp',
                     help="Whether or not to include scout timestamps in the CSV file. ONLY USE with data from Robot Scouter version 3.0.0-beta2 and above ",
                     action="store_true")
-parser.add_argument('-e', '--save_filtered', help="Whether to just format the JSON file and not perform conversions", action="store_true")
+parser.add_argument('-e', '--save_filtered', help="Whether to just format the JSON file and not perform conversions",
+                    action="store_true")
 args = parser.parse_args()
 
 Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
@@ -46,7 +47,8 @@ if args.save_filtered:
     newpath = "{}/{}_filtered.json".format(os.path.dirname(file_path), os.path.basename(file_path).split('.')[0])
     with open(newpath, 'w') as fp:
         json.dump(json_data, fp)
-    print("Successfully created {}.json in {}".format(os.path.basename(file_path).split('.')[0], os.path.dirname(file_path)))
+    print("Successfully created {}.json in {}".format(os.path.basename(file_path).split('.')[0],
+                                                      os.path.dirname(file_path)))
     exit()
 
 # The total number of scouted metrics
@@ -83,7 +85,9 @@ for team in json_data['teams'].values():
         data[row, 1] = scout['name']
         # Add the timestamp of the scout to the data matrix, if needed
         data[row, 2] = scout['timestamp'] if args.timestamp else None
-        metric_values = [i['value'] for i in scout['metrics'].values()]
+        # Adds all the metric values to a list. If the metric value is a string, remove duplicated spaces and tabs
+        metric_values = [" ".join(i['value'].split()) if type(i['value']) is str else i['value'] for i in
+                         scout['metrics'].values()]
         # Check to make sure that the metric values exist before adding to the data matrix
         data[row, column:] = metric_values if (len(metric_values) + column) == len(headers) else None
         row += 1
