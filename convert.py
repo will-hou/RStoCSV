@@ -25,7 +25,7 @@ print("Converting {} into a CSV file".format(file_path))
 print("Filtering: {}, With Timestamps: {}".format(args.filter, args.timestamp))
 
 try:
-    with open(file_path) as file:
+    with open(file_path, 'r', errors='ignore') as file:
         json_data = json.load(file)
 except json.decoder.JSONDecodeError:
     print("Invalid JSON file! Make sure your file is a true JSON file")
