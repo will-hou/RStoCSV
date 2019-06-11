@@ -13,7 +13,8 @@ Make sure you have:
 1. In your terminal of choice, navigate to where you want the folder to be installed. [Click here if that was gibberish](https://www.davidbaumgold.com/tutorials/command-line/).
 2. Enter the following command:
 `git clone https://github.com/will-hou/RStoCSV.git`
-3. You're good to go! RStoCSV is installed locally on your computer!
+3. Enter `pip install -r requirements.txt` to install the necessary dependencies
+4. You're good to go! RStoCSV is installed locally on your computer!
 
 
 ## Usage
