@@ -1,3 +1,6 @@
+import requests
+import json
+
 # Removes a scout if user specified metric is empty
 def filter(json_data, metric_to_filter):
     repeats = []
@@ -32,3 +35,18 @@ def strip_empty_metrics(json_data):
     for i in to_delete:
         del json_data['teams'][i[0]][i[1]]
     return len(to_delete)
+
+
+def generate_team_json():
+    powerhouse_house_of_cell = requests.get('https://www.thebluealliance.com/api/v3/teams/0/simple', params={'X-TBA-Auth-Key': 'KuyisSfG5mADtkhd2h0ebKbiCtE40vqwN5fX6voJq8i4IYr9STai3PpqLHT1z3kR'})
+    # print('running da gamer code')
+    teams = powerhouse_house_of_cell.json()
+
+    powerhouse = {}
+    for i in range(0, 17):
+        teams = requests.get('https://www.thebluealliance.com/api/v3/teams/{}/simple'.format(i), params={'X-TBA-Auth-Key': 'KuyisSfG5mADtkhd2h0ebKbiCtE40vqwN5fX6voJq8i4IYr9STai3PpqLHT1z3kR'}).json()
+        for team in teams:
+            powerhouse[team['team_number']] = team['nickname']
+
+    with open('nicknames.json', 'w') as fp:
+        json.dump(powerhouse, fp)
