@@ -39,12 +39,11 @@ if args.timestamp:
             "The JSON file you uploaded does not have a timestamp value. Try running the program without the -t flag. Use --help for more info")
         exit()
 
-
-if os.path.exists("nicknames.json") == True: 
+if os.path.exists("nicknames.json"):
     with open("nicknames.json", "r") as fp:
         nicknames = json.load(fp)
 else:
-    generate_team_json()        
+    generate_team_json()
 
 # Filter the data, if needed
 filter(json_data, args.filter) if args.filter else None
@@ -71,7 +70,7 @@ for i in json_data['teams'].values():
     num_scouts += len(i)
 
 # Preallocate numpy array with number of scouts and the number of metrics.
-# Add two columns for team numbers and scout names. Add an extra column for timestamps, if needed.
+# Add three columns for team numbers, nicknames, and scout names. Add an extra column for timestamps, if needed.
 num_metrics = num_metrics + 3 + (1 if args.timestamp else 0)
 data = np.zeros((num_scouts, num_metrics), dtype='O')
 
@@ -80,7 +79,7 @@ headers = [i['name'] for i in json_data['teams'][list(json_data['teams'].keys())
 # Add team number and name of scout to the CSV . Add timestamp header, if needed
 headers.insert(0, "Timestamp") if args.timestamp else None
 headers.insert(0, "Name of Scout")
-headers.insert(0, "Team Nickname" )
+headers.insert(0, "Team Nickname")
 headers.insert(0, "Team Number")
 
 # Put scout data into a numpy array
@@ -100,17 +99,15 @@ for team in json_data['teams'].values():
         data[row, column:] = metric_values if (len(metric_values) + column) == len(headers) else None
         row += 1
 
-# Put team numbers into data matrix
+# Put team numbers and their nicknames into data matrix
 team_nums = []
 team_nicks = []
 for team in json_data["teams"]:
     for i in range(len(json_data["teams"][team])):
         team_nums.append(team)
         team_nicks.append(nicknames[team])
-
 data[:, 1] = team_nicks
 data[:, 0] = team_nums
-
 
 # Convert array into dataframe
 table = pd.DataFrame(data=data, columns=headers)
@@ -126,4 +123,3 @@ except PermissionError:
 # Write data from dataframe to CSV file
 table.to_csv(newpath, index=False)
 print("Successfully created {}.csv in {}".format(os.path.basename(file_path).split('.')[0], os.path.dirname(file_path)))
-
