@@ -39,6 +39,12 @@ if args.timestamp:
             "The JSON file you uploaded does not have a timestamp value. Try running the program without the -t flag. Use --help for more info")
         exit()
 
+if os.path.exists("nicknames.json"):
+    with open("nicknames.json", "r") as fp:
+        nicknames = json.load(fp)
+else:
+    generate_team_json()
+
 # Filter the data, if needed
 filter(json_data, args.filter) if args.filter else None
 
@@ -64,8 +70,8 @@ for i in json_data['teams'].values():
     num_scouts += len(i)
 
 # Preallocate numpy array with number of scouts and the number of metrics.
-# Add two columns for team numbers and scout names. Add an extra column for timestamps, if needed.
-num_metrics = num_metrics + 2 + (1 if args.timestamp else 0)
+# Add three columns for team numbers, nicknames, and scout names. Add an extra column for timestamps, if needed.
+num_metrics = num_metrics + 3 + (1 if args.timestamp else 0)
 data = np.zeros((num_scouts, num_metrics), dtype='O')
 
 # List of all metrics scouted
@@ -73,18 +79,19 @@ headers = [i['name'] for i in json_data['teams'][list(json_data['teams'].keys())
 # Add team number and name of scout to the CSV . Add timestamp header, if needed
 headers.insert(0, "Timestamp") if args.timestamp else None
 headers.insert(0, "Name of Scout")
+headers.insert(0, "Team Nickname")
 headers.insert(0, "Team Number")
 
 # Put scout data into a numpy array
 row = 0
 # Find which column we should add the metrics to
-column = 3 if args.timestamp else 2
+column = 4 if args.timestamp else 3
 for team in json_data['teams'].values():
     for scout in team:
         # Add the name of the scout to the data matrix
-        data[row, 1] = scout['name']
+        data[row, 2] = scout['name']
         # Add the timestamp of the scout to the data matrix, if needed
-        data[row, 2] = scout['timestamp'] if args.timestamp else None
+        data[row, 3] = scout['timestamp'] if args.timestamp else None
         # Adds all the metric values to a list. If the metric value is a string, remove duplicated spaces and tabs
         metric_values = [" ".join(i['value'].split()) if type(i['value']) is str else i['value'] for i in
                          scout['metrics'].values()]
@@ -92,11 +99,14 @@ for team in json_data['teams'].values():
         data[row, column:] = metric_values if (len(metric_values) + column) == len(headers) else None
         row += 1
 
-# Put team numbers into data matrix
+# Put team numbers and their nicknames into data matrix
 team_nums = []
+team_nicks = []
 for team in json_data["teams"]:
-    for i in range(0, len(json_data["teams"][team])):
+    for i in range(len(json_data["teams"][team])):
         team_nums.append(team)
+        team_nicks.append(nicknames[team])
+data[:, 1] = team_nicks
 data[:, 0] = team_nums
 
 # Convert array into dataframe
