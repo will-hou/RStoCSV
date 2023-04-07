@@ -41,12 +41,21 @@ def strip_empty_metrics(json_data):
 # Generates a json file with keys corresponding to the team number and values corresponding to the team's nickname
 def generate_team_json():
     nickname_map = {}
-    # Captures team #s up to 8999
-    for i in range(0, 18):
+    i = 0
+    while True:
+        print("Scraping page {}".format(i))
         teams = requests.get('https://www.thebluealliance.com/api/v3/teams/{}/simple'.format(i), params={
             'X-TBA-Auth-Key': 'KuyisSfG5mADtkhd2h0ebKbiCtE40vqwN5fX6voJq8i4IYr9STai3PpqLHT1z3kR'}).json()
+        
+        print(teams[0])
+        # No more pages to scrape if the first team is the demo team
+        if teams[0]['name'] == 'FIRST Off-Season Demo Team':
+            break
+        
         for team in teams:
             nickname_map[team['team_number']] = team['nickname']
+
+        i += 1
 
     with open('nicknames.json', 'w') as fp:
         json.dump(nickname_map, fp)
