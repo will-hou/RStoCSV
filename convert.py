@@ -14,8 +14,9 @@ parser.add_argument('-f', '--filter', help="whether or not to remove empty scout
 parser.add_argument('-t', '--timestamp',
                     help="Whether or not to include scout timestamps in the CSV file. ONLY USE with data from Robot Scouter version 3.0.0-beta2 and above ",
                     action="store_true")
-parser.add_argument('-e', '--save_filtered', help="Whether to just format the JSON file and not perform conversions",
+parser.add_argument('-e', '--save_filtered', help="Whether to just filter the JSON file and not perform conversions",
                     action="store_true")
+parser.add_argument('-n', '--nicknames-refresh', help="Whether to refresh the nicknames.json file", action="store_true")
 args = parser.parse_args()
 
 Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
@@ -23,6 +24,8 @@ file_path = askopenfilename(
     filetypes=[("JSON files", '*.json')])  # show an "Open" dialog box and return the path to the selected file
 print("Converting {} into a CSV file".format(file_path))
 print("Filtering: {}, With Timestamps: {}".format(args.filter, args.timestamp))
+print("Saving filtered JSON: {}".format(args.save_filtered))
+print("Refreshing nicknames.json: {}".format(args.nicknames_refresh))
 
 try:
     with open(file_path, 'r', errors='ignore') as file:
@@ -39,11 +42,13 @@ if args.timestamp:
             "The JSON file you uploaded does not have a timestamp value. Try running the program without the -t flag. Use --help for more info")
         exit()
 
-if os.path.exists("nicknames.json"):
-    with open("nicknames.json", "r") as fp:
-        nicknames = json.load(fp)
-else:
+if not os.path.exists("nicknames.json") or args.nicknames_refresh:
+    print("Generating nicknames.json")
     generate_team_json()
+
+with open("nicknames.json", "r") as fp:
+    nicknames = json.load(fp)
+
 
 # Filter the data, if needed
 filter(json_data, args.filter) if args.filter else None

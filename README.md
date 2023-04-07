@@ -21,16 +21,18 @@ Make sure you have:
 1. Make sure you're in the RStoCSV directory.
 2. To convert your Robot Scouter JSON file to CSV, enter:
 
-`python convert.py [-f [metric_to_filter by] ] [-t]` With the items in the brackets being optional. Remove the brackets if you want to actually use them.
+`python convert.py [-f [metric_to_filter by] ] [-t] [-e] [-n]` With the items in the brackets being optional. Remove the brackets if you want to actually use them.
 
 Optional fields: 
 
 - `-f` Removes any scouts that don't have a value for a specified metric. Enter the name of the metric to filter after the -f flag surrounded by `""`
 - `-t` Adds the timestamp of each scout to the CSV file. NOTE: Only use this for data that was exported WITH Robot Scouter version 3.0.0-beta2 or above. You'll get an error otherwise
+- `-e` Only filters out scouts that have an empty value for the specified metric and exports to a new JSON file without converting to CSV
+- `-n` Regenerates the nicknames.json file. Will overwrite the existing nicknames.json file, if there is one.
  
- 3. RStoCSV will prompt you to select a Robot Scouter JSON file and will automatically analyze it to find all of the scouted metrics. NOTE: Don't select a file that's located within the local RStoCSV directory.
- 4. A new `.csv` file with the same name will be made in the same directory as the original JSON file.
- 5. A HTML file called `table.html` will also be created in the local RStoCSV directory for easy visualization.
+ 1. RStoCSV will prompt you to select a Robot Scouter JSON file and will automatically analyze it to find all of the scouted metrics. NOTE: Don't select a file that's located within the local RStoCSV directory.
+ 2. A new `.csv` file with the same name will be made in the same directory as the original JSON file.
+ 3. A HTML file called `table.html` will also be created in the local RStoCSV directory for easy visualization.
  
 ### Example Usage
   Input:
